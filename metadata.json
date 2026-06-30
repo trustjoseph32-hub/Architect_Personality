@@ -1,0 +1,6 @@
+{
+  "name": "Проект Я: Архитектор личности",
+  "description": "Премиальный экспертный сайт-визитка с админ-панелью о личности, стиле, самопознании и психологии.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
