@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from '../../lib/use-router.js';
 import { api } from '../../lib/api-client.js';
-import { DatabaseSchema, SiteSettings, NavigationItem, PageSection, Direction, Service, TeamMember, Founder, Review, Lead, SeoPage, DesignSettings, LeadStatus, ButtonStyleType } from '../../types.js';
+import { DatabaseSchema, SiteSettings, NavigationItem, PageSection, Direction, DirectionBranch, DevelopmentArea, Service, TeamMember, Founder, Review, Lead, SeoPage, DesignSettings, LeadStatus, ButtonStyleType } from '../../types.js';
 import Button from '../ui/Button.js';
 import Card from '../ui/Card.js';
 import Loader from '../ui/Loader.js';
@@ -13,7 +13,7 @@ import {
 
 export const AdminDashboard: React.FC = () => {
   const { navigate } = useRouter();
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'settings' | 'menu' | 'sections' | 'directions' | 'services' | 'team' | 'founder' | 'reviews' | 'leads' | 'media' | 'seo' | 'design'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'settings' | 'menu' | 'sections' | 'directions' | 'development_areas' | 'services' | 'team' | 'founder' | 'reviews' | 'leads' | 'media' | 'seo' | 'design'>('dashboard');
   
   // App state
   const [loading, setLoading] = useState(true);
@@ -26,6 +26,8 @@ export const AdminDashboard: React.FC = () => {
   const [navigation, setNavigation] = useState<NavigationItem[]>([]);
   const [sections, setSections] = useState<PageSection[]>([]);
   const [directions, setDirections] = useState<Direction[]>([]);
+  const [branches, setBranches] = useState<DirectionBranch[]>([]);
+  const [developmentAreas, setDevelopmentAreas] = useState<DevelopmentArea[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [team, setTeam] = useState<TeamMember[]>([]);
   const [founder, setFounder] = useState<Founder | null>(null);
@@ -34,10 +36,13 @@ export const AdminDashboard: React.FC = () => {
   const [seoPages, setSeoPages] = useState<SeoPage[]>([]);
   const [designSettings, setDesignSettings] = useState<DesignSettings | null>(null);
   const [mediaFiles, setMediaFiles] = useState<Array<{ name: string; url: string; size: string; uploaded_at: string }>>([]);
+  const [selectedLeadForDetail, setSelectedLeadForDetail] = useState<Lead | null>(null);
 
   // Editor states (for CRUD models)
   const [editingItem, setEditingItem] = useState<any | null>(null);
   const [isAddingNew, setIsAddingNew] = useState(false);
+  const [editingBranch, setEditingBranch] = useState<DirectionBranch | null>(null);
+  const [isAddingNewBranch, setIsAddingNewBranch] = useState(false);
 
   // Load everything
   const loadData = async () => {
@@ -58,6 +63,7 @@ export const AdminDashboard: React.FC = () => {
       setNavigation(pub.navigation_items);
       setSections(pub.page_sections);
       setDirections(pub.directions);
+      setDevelopmentAreas(pub.development_areas || []);
       setServices(pub.services);
       setTeam(pub.team_members);
       setFounder(pub.founder);
@@ -70,6 +76,9 @@ export const AdminDashboard: React.FC = () => {
 
       const mediaList = await api.getMediaFiles();
       setMediaFiles(mediaList);
+
+      const branchesList = await api.getDirectionBranches();
+      setBranches(branchesList);
 
       const seoList = await api.getSeoPages();
       setSeoPages(seoList);
@@ -160,6 +169,7 @@ export const AdminDashboard: React.FC = () => {
               { id: 'menu', label: 'Меню', icon: Menu },
               { id: 'sections', label: 'Секции главной', icon: Columns },
               { id: 'directions', label: 'Направления', icon: Compass },
+              { id: 'development_areas', label: 'Сферы 360°', icon: Sparkles },
               { id: 'services', label: 'Услуги', icon: Sparkles },
               { id: 'team', label: 'Команда', icon: Users },
               { id: 'founder', label: 'Основатель', icon: User },
@@ -405,9 +415,7 @@ export const AdminDashboard: React.FC = () => {
                         <td className="py-4 px-2 text-right">
                           <Button
                             variant="text"
-                            onClick={() => {
-                              alert(`Сообщение от ${l.name}:\n\n${l.message || 'Нет сообщения'}\n\nКонтакты: ${l.phone || ''} ${l.email || ''} ${l.messenger || ''}`);
-                            }}
+                            onClick={() => setSelectedLeadForDetail(l)}
                             className="p-1"
                           >
                             Подробнее
@@ -418,6 +426,138 @@ export const AdminDashboard: React.FC = () => {
                   </tbody>
                 </table>
               </div>
+
+              {/* Lead Detail Modal */}
+              {selectedLeadForDetail && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+                  <div className="bg-white rounded-[1.5rem] max-w-2xl w-full p-8 max-h-[90vh] overflow-y-auto space-y-6 shadow-2xl relative border border-stone-100">
+                    <button
+                      onClick={() => setSelectedLeadForDetail(null)}
+                      className="absolute top-6 right-6 p-1.5 rounded-full hover:bg-stone-100 text-stone-400 hover:text-stone-700 transition-colors"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+
+                    <div className="space-y-1">
+                      <span className="font-mono text-[10px] tracking-widest text-amber-800 uppercase font-bold">Детали заявки</span>
+                      <h3 className="font-heading text-2xl font-medium text-slate-900 leading-tight">
+                        {selectedLeadForDetail.name}
+                      </h3>
+                      <p className="text-stone-400 text-xs font-mono">
+                        Поступила: {new Date(selectedLeadForDetail.created_at).toLocaleString('ru-RU')}
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 border-t border-stone-100">
+                      <div className="space-y-1">
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-semibold block">Телефон</span>
+                        <p className="text-stone-800 text-sm font-medium">{selectedLeadForDetail.phone || '—'}</p>
+                      </div>
+                      <div className="space-y-1">
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-semibold block">Email</span>
+                        <p className="text-stone-800 text-sm font-medium">{selectedLeadForDetail.email || '—'}</p>
+                      </div>
+                      <div className="space-y-1">
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-semibold block">Ник в мессенджере</span>
+                        <p className="text-stone-800 text-sm font-medium">{selectedLeadForDetail.messenger || '—'}</p>
+                      </div>
+                      <div className="space-y-1">
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-semibold block">Выбранное направление</span>
+                        <p className="text-amber-900 text-sm font-semibold">{selectedLeadForDetail.direction || 'Консультация'}</p>
+                      </div>
+                    </div>
+
+                    {/* Extended questionnaire data fields */}
+                    <div className="bg-stone-50 p-5 rounded-xl space-y-4 border border-stone-200/60">
+                      <div className="space-y-1">
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-bold block">Сферы развития 360° (выбранные в анкете):</span>
+                        {selectedLeadForDetail.selected_areas && selectedLeadForDetail.selected_areas.length > 0 ? (
+                          <div className="flex flex-wrap gap-1.5 mt-1">
+                            {selectedLeadForDetail.selected_areas.map((area, idx) => (
+                              <span key={idx} className="bg-amber-100 text-amber-900 text-[11px] px-2.5 py-0.5 rounded-full font-medium">
+                                {area}
+                              </span>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-stone-500 text-xs italic">Сферы не выбраны или заявка создана по старой форме</p>
+                        )}
+                      </div>
+
+                      <div className="space-y-1">
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-bold block">Желаемые изменения в жизни:</span>
+                        <p className="text-stone-800 text-xs sm:text-sm whitespace-pre-wrap font-light leading-relaxed">
+                          {selectedLeadForDetail.desired_changes || 'Не заполнено'}
+                        </p>
+                      </div>
+
+                      <div className="space-y-1">
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-stone-500 font-bold block">Основное препятствие:</span>
+                        <p className="text-stone-800 text-xs sm:text-sm whitespace-pre-wrap font-light leading-relaxed">
+                          {selectedLeadForDetail.main_obstacle || 'Не заполнено'}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-semibold block">Сообщение пользователя</span>
+                      <div className="p-4 bg-stone-50 border border-stone-200/40 rounded-xl text-stone-700 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap font-light">
+                        {selectedLeadForDetail.message || 'Нет сообщения'}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end pt-4 border-t border-stone-100">
+                      <div className="space-y-1.5">
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-stone-600 font-semibold block">Статус заявки</span>
+                        <select
+                          value={selectedLeadForDetail.status}
+                          onChange={async (e) => {
+                            try {
+                              const updated = await api.updateLead(selectedLeadForDetail.id, { status: e.target.value as LeadStatus });
+                              setLeads(leads.map(x => x.id === selectedLeadForDetail.id ? updated : x));
+                              setSelectedLeadForDetail(updated);
+                              flashSuccess('Статус заявки успешно обновлен');
+                            } catch (err: any) {
+                              flashError('Ошибка обновления статуса');
+                            }
+                          }}
+                          className="px-3 py-2 border rounded-md w-full bg-white text-xs font-mono focus:outline-none"
+                        >
+                          <option value="new">Новая</option>
+                          <option value="in_progress">В работе</option>
+                          <option value="closed">Закрыта</option>
+                        </select>
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-stone-600 font-semibold block">Внутренний комментарий администратора</span>
+                        <input
+                          type="text"
+                          defaultValue={selectedLeadForDetail.admin_comment || ''}
+                          placeholder="Ваши пометки..."
+                          onBlur={async (e) => {
+                            try {
+                              const updated = await api.updateLead(selectedLeadForDetail.id, { admin_comment: e.target.value });
+                              setLeads(leads.map(x => x.id === selectedLeadForDetail.id ? updated : x));
+                              setSelectedLeadForDetail(updated);
+                              flashSuccess('Комментарий успешно сохранен');
+                            } catch (err: any) {
+                              flashError('Ошибка сохранения комментария');
+                            }
+                          }}
+                          className="px-3 py-2 text-xs border border-stone-200 rounded-md w-full focus:outline-none focus:border-amber-700"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end pt-2">
+                      <Button onClick={() => setSelectedLeadForDetail(null)} variant="primary" className="px-6 py-2.5 text-xs font-semibold uppercase tracking-wider">
+                        Закрыть окно
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -781,6 +921,14 @@ export const AdminDashboard: React.FC = () => {
                         <input type="text" name="slug" required defaultValue={editingItem?.slug || ''} className="px-3 py-2 border rounded" />
                       </div>
                       <div className="flex flex-col space-y-1.5">
+                        <label className="text-[10px] font-mono uppercase tracking-wider text-stone-600">Ключевой вопрос (например: "Кто я?")</label>
+                        <input type="text" name="key_question" defaultValue={editingItem?.key_question || ''} className="px-3 py-2 border rounded" />
+                      </div>
+                      <div className="flex flex-col space-y-1.5">
+                        <label className="text-[10px] font-mono uppercase tracking-wider text-stone-600">Цвет фона карточки (HEX, например: #FAF5F0)</label>
+                        <input type="text" name="accent_color" defaultValue={editingItem?.accent_color || ''} className="px-3 py-2 border rounded" />
+                      </div>
+                      <div className="flex flex-col space-y-1.5">
                         <label className="text-[10px] font-mono uppercase tracking-wider text-stone-600">Название иконки Lucide (Compass, Sparkles, UserCheck)</label>
                         <input type="text" name="icon" defaultValue={editingItem?.icon || 'Compass'} className="px-3 py-2 border rounded" />
                       </div>
@@ -803,6 +951,276 @@ export const AdminDashboard: React.FC = () => {
                       <div className="flex flex-col space-y-1.5 sm:col-span-2">
                         <label className="text-[10px] font-mono uppercase tracking-wider text-stone-600">Ожидаемые результаты (в формате JSON массива, например: ["Уверенность", "Имидж"])</label>
                         <textarea name="results_json" defaultValue={editingItem?.results_json || '[]'} rows={2} className="px-3 py-2 border rounded font-mono text-xs resize-none" />
+                      </div>
+                    </div>
+                    <div className="flex gap-3">
+                      <Button type="submit" disabled={saving} className="px-8 py-3 text-xs tracking-widest font-semibold uppercase">
+                        {saving ? 'Сохранение...' : 'Сохранить направление'}
+                      </Button>
+                      <Button variant="outline" type="button" onClick={() => { setIsAddingNew(false); setEditingItem(null); setEditingBranch(null); setIsAddingNewBranch(false); }} className="px-8 py-3 text-xs tracking-widest font-semibold uppercase">
+                        Отмена
+                      </Button>
+                    </div>
+                  </form>
+
+                  {/* BRANCHES LIST EDITOR (ONLY WHEN EDITING EXISTING DIRECTION) */}
+                  {!isAddingNew && editingItem?.id && (
+                    <div className="border-t border-stone-200 pt-8 mt-8 space-y-6">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <h4 className="font-heading font-medium text-slate-900 text-lg">Внутренние ветки развития</h4>
+                          <p className="text-xs text-stone-500 font-light">Добавьте или измените внутренние ветки для детальной проработки направления</p>
+                        </div>
+                        {!isAddingNewBranch && !editingBranch && (
+                          <Button 
+                            type="button"
+                            onClick={() => {
+                              setIsAddingNewBranch(true);
+                              setEditingBranch(null);
+                            }} 
+                            className="py-2 px-4 text-xs font-semibold uppercase tracking-wider bg-stone-900 text-white"
+                          >
+                            <Plus className="w-4 h-4 mr-1.5" /> Добавить ветку
+                          </Button>
+                        )}
+                      </div>
+
+                      {/* Add/Edit branch inline sub-form */}
+                      {(isAddingNewBranch || editingBranch) && (
+                        <div className="p-5 border border-stone-200 bg-stone-50 rounded-xl space-y-4">
+                          <h5 className="font-heading font-medium text-slate-900 text-sm">
+                            {isAddingNewBranch ? 'Новая внутренняя ветка' : 'Редактирование внутренней ветки'}
+                          </h5>
+                          <form onSubmit={async (e) => {
+                            e.preventDefault();
+                            setSaving(true);
+                            try {
+                              const fd = new FormData(e.currentTarget);
+                              const payload = {
+                                direction_id: editingItem.id,
+                                title: fd.get('branch_title') as string,
+                                short_description: fd.get('branch_short_desc') as string,
+                                sort_order: Number(fd.get('branch_sort_order')),
+                                is_published: fd.get('branch_is_published') === 'true'
+                              };
+
+                              const res = await api.saveDirectionBranch(editingBranch?.id || null, payload);
+
+                              if (isAddingNewBranch) {
+                                setBranches([...branches, res]);
+                              } else {
+                                setBranches(branches.map(b => b.id === editingBranch?.id ? res : b));
+                              }
+                              setIsAddingNewBranch(false);
+                              setEditingBranch(null);
+                              flashSuccess('Ветка успешно сохранена');
+                            } catch (err: any) {
+                              flashError(err.message || 'Ошибка сохранения ветки');
+                            } finally {
+                              setSaving(false);
+                            }
+                          }} className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                              <div className="flex flex-col space-y-1">
+                                <label className="text-[10px] font-mono uppercase tracking-wider text-stone-600">Название ветки</label>
+                                <input type="text" name="branch_title" required defaultValue={editingBranch?.title || ''} className="px-3 py-1.5 text-sm border rounded bg-white" />
+                              </div>
+                              <div className="flex flex-col space-y-1">
+                                <label className="text-[10px] font-mono uppercase tracking-wider text-stone-600">Порядок сортировки</label>
+                                <input type="number" name="branch_sort_order" required defaultValue={editingBranch?.sort_order !== undefined ? editingBranch.sort_order : branches.filter(b => b.direction_id === editingItem.id).length + 1} className="px-3 py-1.5 text-sm border rounded bg-white" />
+                              </div>
+                              <div className="flex flex-col space-y-1">
+                                <label className="text-[10px] font-mono uppercase tracking-wider text-stone-600">Статус публикации</label>
+                                <select name="branch_is_published" defaultValue={editingBranch?.is_published !== false ? 'true' : 'false'} className="px-3 py-1.5 text-sm border rounded bg-white">
+                                  <option value="true">Опубликовано</option>
+                                  <option value="false">Скрыто</option>
+                                </select>
+                              </div>
+                              <div className="flex flex-col space-y-1 md:col-span-3">
+                                <label className="text-[10px] font-mono uppercase tracking-wider text-stone-600">Описание ветки</label>
+                                <textarea name="branch_short_desc" required defaultValue={editingBranch?.short_description || ''} rows={3} className="px-3 py-1.5 text-sm border rounded bg-white resize-none" />
+                              </div>
+                            </div>
+                            <div className="flex gap-2">
+                              <Button type="submit" disabled={saving} className="py-2 px-5 text-xs font-semibold uppercase tracking-wider bg-amber-800 text-white">
+                                {saving ? 'Сохранение...' : 'Сохранить ветку'}
+                              </Button>
+                              <Button 
+                                variant="outline" 
+                                type="button" 
+                                onClick={() => {
+                                  setIsAddingNewBranch(false);
+                                  setEditingBranch(null);
+                                }} 
+                                className="py-2 px-5 text-xs font-semibold uppercase tracking-wider"
+                              >
+                                Отмена
+                              </Button>
+                            </div>
+                          </form>
+                        </div>
+                      )}
+
+                      {/* Branches list table/cards */}
+                      <div className="space-y-3">
+                        {branches.filter(b => b.direction_id === editingItem.id).length === 0 ? (
+                          <p className="text-sm text-stone-400 italic">Для данного направления еще нет веток. Добавьте первую ветку выше.</p>
+                        ) : (
+                          <div className="border border-stone-200 rounded-xl overflow-hidden bg-white">
+                            <table className="w-full text-left text-xs text-stone-600 border-collapse">
+                              <thead>
+                                <tr className="bg-stone-50 border-b border-stone-200 text-[10px] font-mono uppercase tracking-wider text-stone-400">
+                                  <th className="p-3">Название</th>
+                                  <th className="p-3">Описание</th>
+                                  <th className="p-3 text-center w-20">Порядок</th>
+                                  <th className="p-3 text-center w-28">Статус</th>
+                                  <th className="p-3 text-right w-24">Действия</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {branches.filter(b => b.direction_id === editingItem.id).sort((a,b) => a.sort_order - b.sort_order).map(b => (
+                                  <tr key={b.id} className="border-b border-stone-100 hover:bg-stone-50/50">
+                                    <td className="p-3 font-medium text-slate-800">{b.title}</td>
+                                    <td className="p-3 max-w-xs truncate text-stone-500 font-light">{b.short_description}</td>
+                                    <td className="p-3 text-center font-mono">{b.sort_order}</td>
+                                    <td className="p-3 text-center">
+                                      <span className={`px-2 py-0.5 rounded-full text-[9px] font-mono ${b.is_published ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-stone-100 text-stone-600 border border-stone-200'}`}>
+                                        {b.is_published ? 'АКТИВНА' : 'СКРЫТА'}
+                                      </span>
+                                    </td>
+                                    <td className="p-3 text-right space-x-1.5 whitespace-nowrap">
+                                      <button 
+                                        type="button" 
+                                        onClick={() => {
+                                          setEditingBranch(b);
+                                          setIsAddingNewBranch(false);
+                                        }} 
+                                        className="text-stone-500 hover:text-stone-800"
+                                      >
+                                        <Edit2 className="w-3.5 h-3.5 inline" />
+                                      </button>
+                                      <button 
+                                        type="button" 
+                                        onClick={async () => {
+                                          if (confirm('Удалить ветку?')) {
+                                            await api.deleteDirectionBranch(b.id);
+                                            setBranches(branches.filter(x => x.id !== b.id));
+                                            flashSuccess('Ветка удалена');
+                                          }
+                                        }} 
+                                        className="text-red-500 hover:text-red-800"
+                                      >
+                                        <Trash2 className="w-3.5 h-3.5 inline" />
+                                      </button>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </Card>
+              )}
+            </div>
+          )}
+
+          {/* TAB 6B: DEVELOPMENT AREAS (Сферы развития 360°) */}
+          {activeTab === 'development_areas' && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <span className="font-mono text-xs text-stone-400 block uppercase tracking-wider">Сферы развития 360°</span>
+                {!isAddingNew && !editingItem && (
+                  <Button onClick={() => setIsAddingNew(true)} className="py-2.5 text-xs font-semibold uppercase tracking-wider">
+                    <Plus className="w-4 h-4 mr-2" /> Добавить сферу
+                  </Button>
+                )}
+              </div>
+
+              {/* LIST VIEW */}
+              {!isAddingNew && !editingItem && (
+                <div className="grid grid-cols-1 gap-4">
+                  {developmentAreas.map(area => (
+                    <Card key={area.id} className="p-6 bg-white border border-stone-200 flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-800 font-bold border border-amber-200">
+                          {area.icon || '✦'}
+                        </div>
+                        <div>
+                          <h4 className="font-heading font-medium text-slate-900 text-lg">{area.title}</h4>
+                          <p className="text-xs text-stone-400 font-mono">key: {area.key} | icon: {area.icon} | color: {area.color}</p>
+                          <p className="text-stone-500 text-xs mt-1 font-light line-clamp-1">{area.description}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button variant="outline" className="p-2" onClick={() => setEditingItem(area)}>
+                          <Edit2 className="w-4 h-4 text-stone-600" />
+                        </Button>
+                        <Button variant="outline" className="p-2 border-red-200 hover:bg-red-50" onClick={async () => {
+                          if (confirm('Вы уверены, что хотите удалить эту сферу развития?')) {
+                            await api.deleteDevelopmentArea(area.id);
+                            setDevelopmentAreas(developmentAreas.filter(a => a.id !== area.id));
+                            flashSuccess('Сфера развития успешно удалена');
+                          }
+                        }}>
+                          <Trash2 className="w-4 h-4 text-red-600" />
+                        </Button>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              )}
+
+              {/* ADD NEW / EDIT FORM */}
+              {(isAddingNew || editingItem) && (
+                <Card className="p-8 sm:p-10 border bg-white space-y-6">
+                  <h3 className="font-heading text-xl font-semibold border-b border-stone-100 pb-3 text-slate-900">
+                    {isAddingNew ? 'Новая сфера развития' : `Редактирование: ${editingItem.title}`}
+                  </h3>
+                  <form onSubmit={async (e) => {
+                    e.preventDefault();
+                    setSaving(true);
+                    try {
+                      const data = new FormData(e.currentTarget);
+                      const payload = Object.fromEntries(data.entries());
+                      const res = await api.saveDevelopmentArea(editingItem?.id || null, payload as any);
+                      
+                      if (isAddingNew) {
+                        setDevelopmentAreas([...developmentAreas, res]);
+                      } else {
+                        setDevelopmentAreas(developmentAreas.map(a => a.id === editingItem.id ? res : a));
+                      }
+                      setIsAddingNew(false);
+                      setEditingItem(null);
+                      flashSuccess('Сфера развития успешно сохранена');
+                    } catch (err: any) {
+                      flashError(err.message || 'Ошибка сохранения');
+                    } finally {
+                      setSaving(false);
+                    }
+                  }} className="space-y-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div className="flex flex-col space-y-1.5">
+                        <label className="text-[10px] font-mono uppercase tracking-wider text-stone-600">Название сферы</label>
+                        <input type="text" name="title" required defaultValue={editingItem?.title || ''} className="px-3 py-2 border rounded" />
+                      </div>
+                      <div className="flex flex-col space-y-1.5">
+                        <label className="text-[10px] font-mono uppercase tracking-wider text-stone-600">Системный ключ (key)</label>
+                        <input type="text" name="key" required defaultValue={editingItem?.key || ''} className="px-3 py-2 border rounded" />
+                      </div>
+                      <div className="flex flex-col space-y-1.5">
+                        <label className="text-[10px] font-mono uppercase tracking-wider text-stone-600">Иконка Lucide (e.g. Brain, Heart, Focus, Sparkles)</label>
+                        <input type="text" name="icon" defaultValue={editingItem?.icon || 'Sparkles'} className="px-3 py-2 border rounded" />
+                      </div>
+                      <div className="flex flex-col space-y-1.5">
+                        <label className="text-[10px] font-mono uppercase tracking-wider text-stone-600">Градиент / Цвет (Tailwind CSS, e.g. from-amber-500 to-amber-700)</label>
+                        <input type="text" name="color" defaultValue={editingItem?.color || 'from-stone-500 to-stone-700'} className="px-3 py-2 border rounded" />
+                      </div>
+                      <div className="flex flex-col space-y-1.5 sm:col-span-2">
+                        <label className="text-[10px] font-mono uppercase tracking-wider text-stone-600">Подробное описание</label>
+                        <textarea name="description" defaultValue={editingItem?.description || ''} rows={4} className="px-3 py-2 border rounded resize-none" />
                       </div>
                     </div>
                     <div className="flex gap-3">

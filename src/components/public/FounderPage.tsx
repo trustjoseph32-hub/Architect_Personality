@@ -42,7 +42,7 @@ export const FounderPage: React.FC<FounderPageProps> = ({ founder }) => {
           <div className="lg:col-span-5 relative">
             <div className="rounded-[2rem] overflow-hidden shadow-2xl h-[36rem] bg-stone-100">
               <img
-                src={founder.photo_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800'}
+                src={founder.photo_url || 'https://hhzxqrqfeudecnyujowb.supabase.co/storage/v1/object/public/AMIRA/Zemfira.jpg'}
                 alt={founder.name}
                 className="w-full h-full object-cover grayscale-[10%]"
                 referrerPolicy="no-referrer"

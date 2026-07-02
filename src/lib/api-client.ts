@@ -1,4 +1,4 @@
-import { DatabaseSchema, SiteSettings, NavigationItem, PageSection, Direction, Service, TeamMember, Founder, Review, Lead, SeoPage, DesignSettings } from '../types.js';
+import { DatabaseSchema, SiteSettings, NavigationItem, PageSection, Direction, DirectionBranch, DevelopmentArea, Service, TeamMember, Founder, Review, Lead, SeoPage, DesignSettings } from '../types.js';
 
 const API_BASE = '';
 
@@ -34,6 +34,8 @@ export const api = {
     navigation_items: NavigationItem[];
     page_sections: PageSection[];
     directions: Direction[];
+    direction_branches: DirectionBranch[];
+    development_areas: DevelopmentArea[];
     services: Service[];
     team_members: TeamMember[];
     founder: Founder;
@@ -48,6 +50,9 @@ export const api = {
     messenger: string;
     direction: string;
     message: string;
+    selected_areas?: string[];
+    desired_changes?: string;
+    main_obstacle?: string;
   }) => apiRequest<{ success: boolean; lead: Lead }>(`${API_BASE}/api/public/leads`, {
     method: 'POST',
     body: JSON.stringify(payload)
@@ -101,6 +106,18 @@ export const api = {
     }),
   deleteDirection: (id: string) => 
     apiRequest<{ success: boolean }>(`${API_BASE}/api/admin/directions/${id}`, {
+      method: 'DELETE'
+    }),
+
+  // Direction Branches
+  getDirectionBranches: () => apiRequest<DirectionBranch[]>(`${API_BASE}/api/admin/direction-branches`),
+  saveDirectionBranch: (id: string | null, payload: Partial<DirectionBranch>) =>
+    apiRequest<DirectionBranch>(id ? `${API_BASE}/api/admin/direction-branches/${id}` : `${API_BASE}/api/admin/direction-branches`, {
+      method: id ? 'PUT' : 'POST',
+      body: JSON.stringify(payload)
+    }),
+  deleteDirectionBranch: (id: string) =>
+    apiRequest<{ success: boolean }>(`${API_BASE}/api/admin/direction-branches/${id}`, {
       method: 'DELETE'
     }),
 
@@ -161,6 +178,18 @@ export const api = {
     apiRequest<DesignSettings>(`${API_BASE}/api/admin/design`, {
       method: 'PUT',
       body: JSON.stringify(payload)
+    }),
+
+  // Development Areas
+  getDevelopmentAreas: () => apiRequest<DevelopmentArea[]>(`${API_BASE}/api/admin/development-areas`),
+  saveDevelopmentArea: (id: string | null, payload: Partial<DevelopmentArea>) => 
+    apiRequest<DevelopmentArea>(id ? `${API_BASE}/api/admin/development-areas/${id}` : `${API_BASE}/api/admin/development-areas`, {
+      method: id ? 'PUT' : 'POST',
+      body: JSON.stringify(payload)
+    }),
+  deleteDevelopmentArea: (id: string) => 
+    apiRequest<{ success: boolean }>(`${API_BASE}/api/admin/development-areas/${id}`, {
+      method: 'DELETE'
     }),
 
   // Media

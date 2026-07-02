@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from './lib/use-router';
 import { api } from './lib/api-client';
 import { 
-  SiteSettings, NavigationItem, PageSection, Direction, 
+  SiteSettings, NavigationItem, PageSection, Direction, DirectionBranch, DevelopmentArea,
   Service, TeamMember, Founder, Review, DesignSettings, SeoPage 
 } from './types';
 
@@ -16,8 +16,9 @@ import Button from './components/ui/Button';
 import Header from './components/public/Header';
 import Footer from './components/public/Footer';
 import HeroSection from './components/public/HeroSection';
-import PhilosophySection from './components/public/PhilosophySection';
-import AboutSection from './components/public/AboutSection';
+import DirectionsSection from './components/public/DirectionsSection';
+import Model360Section from './components/public/Model360Section';
+import HowItWorksSection from './components/public/HowItWorksSection';
 import LeadFormSection from './components/public/LeadFormSection';
 
 // Public pages
@@ -36,7 +37,7 @@ import AdminLoginForm from './components/admin/AdminLoginForm';
 import AdminDashboard from './components/admin/AdminDashboard';
 
 // Lucide Icons
-import { Sparkles, Calendar, MapPin, ArrowRight } from 'lucide-react';
+import { Sparkles, ArrowRight } from 'lucide-react';
 
 export default function App() {
   const { currentPath, navigate } = useRouter();
@@ -48,6 +49,8 @@ export default function App() {
   const [navigation, setNavigation] = useState<NavigationItem[]>([]);
   const [sections, setSections] = useState<PageSection[]>([]);
   const [directions, setDirections] = useState<Direction[]>([]);
+  const [directionBranches, setDirectionBranches] = useState<DirectionBranch[]>([]);
+  const [developmentAreas, setDevelopmentAreas] = useState<DevelopmentArea[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [team, setTeam] = useState<TeamMember[]>([]);
   const [founder, setFounder] = useState<Founder | null>(null);
@@ -66,6 +69,8 @@ export default function App() {
       setNavigation(pub.navigation_items);
       setSections(pub.page_sections);
       setDirections(pub.directions);
+      setDirectionBranches(pub.direction_branches || []);
+      setDevelopmentAreas(pub.development_areas || []);
       setServices(pub.services);
       setTeam(pub.team_members);
       setFounder(pub.founder);
@@ -193,77 +198,18 @@ export default function App() {
               />
             )}
 
-            {/* Philosophy Principles Block */}
-            {sections.find(s => s.section_key === 'philosophy') && (
-              <PhilosophySection 
-                section={sections.find(s => s.section_key === 'philosophy')!} 
-                buttonStyle={designSettings?.button_style}
-              />
-            )}
+            {/* Three Directions of Development Section */}
+            <DirectionsSection 
+              directions={directions} 
+              branches={directionBranches} 
+              buttonStyle={designSettings?.button_style} 
+            />
 
-            {/* General About Segment */}
-            {sections.find(s => s.section_key === 'about') && (
-              <AboutSection 
-                section={sections.find(s => s.section_key === 'about')!} 
-                buttonStyle={designSettings?.button_style}
-              />
-            )}
-
-            {/* Custom Interactive Services & Programs Block */}
-            <section id="services" className="py-24 sm:py-32 bg-[#FAF8F5]">
-              <Container>
-                <div className="flex flex-col items-center text-center mb-16 max-w-2xl mx-auto space-y-4">
-                  <span className="font-mono text-xs tracking-[0.25em] text-amber-800 uppercase font-semibold">ПРОГРАММЫ И КУРСЫ</span>
-                  <h2 className="text-3xl sm:text-4xl font-medium text-slate-900 tracking-tight font-heading">Программы Сопровождения</h2>
-                  <p className="text-stone-500 font-light text-sm sm:text-base leading-relaxed">
-                    Авторские синергетические продукты Земфиры Хисамутдиновой для глубокой проработки психологической зрелости и невербального стиля.
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
-                  {services.map((srv) => (
-                    <Card
-                      key={srv.id}
-                      className="flex flex-col bg-white border border-stone-200 group cursor-pointer"
-                      onClick={() => navigate(`/services/${srv.slug}`)}
-                    >
-                      <div className="h-64 sm:h-80 w-full overflow-hidden relative">
-                        <img
-                          src={srv.image_url || 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800'}
-                          alt={srv.title}
-                          className="w-full h-full object-cover grayscale-[15%] group-hover:scale-105 group-hover:grayscale-0 transition-all duration-700"
-                          referrerPolicy="no-referrer"
-                        />
-                      </div>
-                      <div className="p-6 sm:p-8 flex-grow flex flex-col justify-between space-y-6">
-                        <div className="space-y-3">
-                          <div className="flex items-center gap-3 text-xs text-stone-400 font-mono">
-                            <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" /> {srv.duration}</span>
-                            <span>•</span>
-                            <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5" /> {srv.format}</span>
-                          </div>
-                          <h3 className="font-heading text-xl sm:text-2xl font-medium text-slate-900 leading-tight">
-                            {srv.title}
-                          </h3>
-                          <p className="text-sm text-stone-500 font-light leading-relaxed line-clamp-2">
-                            {srv.short_description}
-                          </p>
-                        </div>
-                        <div className="pt-4 border-t border-stone-50 flex items-center justify-between">
-                          <span className="font-heading font-semibold text-slate-950 text-base">{srv.price}</span>
-                          <span className="text-xs font-mono tracking-widest text-amber-800 uppercase font-bold flex items-center gap-1.5">
-                            Подробнее <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                          </span>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              </Container>
-            </section>
+            {/* How It Works Section */}
+            <HowItWorksSection />
 
             {/* Inbound Client leads form capture */}
-            <LeadFormSection directions={directions} />
+            <LeadFormSection directions={directions} areas={developmentAreas} />
           </>
         );
 
@@ -293,7 +239,7 @@ export default function App() {
         if (currentPath.startsWith('/directions/')) {
           const slug = currentPath.split('/').pop();
           const dir = directions.find(d => d.slug === slug);
-          return <DirectionDetailPage direction={dir!} />;
+          return <DirectionDetailPage direction={dir!} branches={directionBranches} />;
         }
         // Handle Services Slug Match
         if (currentPath.startsWith('/services/')) {

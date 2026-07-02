@@ -42,6 +42,8 @@ app.get('/api/public/data', (req, res) => {
       navigation_items: dbServer.getNavigationItems(),
       page_sections: dbServer.getPageSections(),
       directions: dbServer.getDirections().filter(d => d.is_published),
+      direction_branches: dbServer.getDirectionBranches().filter(b => b.is_published),
+      development_areas: dbServer.getDevelopmentAreas().filter(a => a.is_published),
       services: dbServer.getServices().filter(s => s.is_published),
       team_members: dbServer.getTeamMembers().filter(t => t.is_published),
       founder: dbServer.getFounder(),
@@ -57,14 +59,24 @@ app.get('/api/public/data', (req, res) => {
 // Create Lead (Public Submit Form)
 app.post('/api/public/leads', (req, res) => {
   try {
-    const { name, phone, email, messenger, direction, message } = req.body;
+    const { name, phone, email, messenger, direction, message, selected_areas, desired_changes, main_obstacle } = req.body;
     if (!name) {
       return res.status(400).json({ error: 'Поле "Имя" обязательно для заполнения' });
     }
     if (!phone && !email) {
       return res.status(400).json({ error: 'Необходимо указать Телефон или Email для связи' });
     }
-    const lead = dbServer.createLead({ name, phone, email, messenger, direction, message });
+    const lead = dbServer.createLead({
+      name,
+      phone,
+      email,
+      messenger,
+      direction,
+      message,
+      selected_areas,
+      desired_changes,
+      main_obstacle
+    });
     res.status(201).json({ success: true, lead });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
@@ -164,6 +176,70 @@ app.put('/api/admin/directions/:id', requireAdmin, (req, res) => {
 app.delete('/api/admin/directions/:id', requireAdmin, (req, res) => {
   try {
     const success = dbServer.deleteDirection(req.params.id);
+    res.json({ success });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Direction Branches CRUD
+app.get('/api/admin/direction-branches', requireAdmin, (req, res) => {
+  res.json(dbServer.getDirectionBranches());
+});
+
+app.post('/api/admin/direction-branches', requireAdmin, (req, res) => {
+  try {
+    const branch = dbServer.saveDirectionBranch('', req.body);
+    res.status(201).json(branch);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.put('/api/admin/direction-branches/:id', requireAdmin, (req, res) => {
+  try {
+    const branch = dbServer.saveDirectionBranch(req.params.id, req.body);
+    res.json(branch);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.delete('/api/admin/direction-branches/:id', requireAdmin, (req, res) => {
+  try {
+    const success = dbServer.deleteDirectionBranch(req.params.id);
+    res.json({ success });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Development Areas CRUD
+app.get('/api/admin/development-areas', requireAdmin, (req, res) => {
+  res.json(dbServer.getDevelopmentAreas());
+});
+
+app.post('/api/admin/development-areas', requireAdmin, (req, res) => {
+  try {
+    const area = dbServer.saveDevelopmentArea('', req.body);
+    res.status(201).json(area);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.put('/api/admin/development-areas/:id', requireAdmin, (req, res) => {
+  try {
+    const area = dbServer.saveDevelopmentArea(req.params.id, req.body);
+    res.json(area);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.delete('/api/admin/development-areas/:id', requireAdmin, (req, res) => {
+  try {
+    const success = dbServer.deleteDevelopmentArea(req.params.id);
     res.json({ success });
   } catch (error: any) {
     res.status(500).json({ error: error.message });

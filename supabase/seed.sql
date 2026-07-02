@@ -41,7 +41,7 @@ INSERT INTO page_sections (page_key, section_key, title, subtitle, eyebrow, cont
   'Проект раскрытия индивидуальности',
   'Мы помогаем человеку увидеть свою индивидуальность, соединить внутреннее состояние с внешним образом и выстроить личную стратегию проявления в жизни, профессии и отношениях.',
   '',
-  'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1600',
+  'https://hhzxqrqfeudecnyujowb.supabase.co/storage/v1/object/public/AMIRA/Zemfira.jpg',
   'Оставить заявку',
   '#lead-form',
   1,
@@ -196,7 +196,7 @@ INSERT INTO founder (name, role, photo_url, short_description, full_bio, experie
 VALUES (
   'Земфира Хисамутдинова',
   'Основатель Проекта, Психолог-Имиджмейкер',
-  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800',
+  'https://hhzxqrqfeudecnyujowb.supabase.co/storage/v1/object/public/AMIRA/Zemfira.jpg',
   'Автор уникальной методики синергии психологии и стиля. Более 10 лет опыта работы с первыми лицами.',
   'Земфира Хисамутдинова посвятила более десяти лет изучению того, как наш внутренний мир отражается в наших внешних выборах. Получив образование в сфере практической психологии и концептуального стайлинга во Франции, она объединила эти дисциплины в единую стройную систему. Земфира убеждена, что одежда — это мощнейший инструмент психологической саморегуляции и социальной коммуникации.',
   '12 лет практики, более 500 индивидуальных выпускников по всему миру, спикер отраслевых конференций.',
@@ -245,7 +245,7 @@ INSERT INTO seo_pages (page_key, title, description, keywords, og_title, og_desc
   'психология, стиль, индивидуальность, саморазвитие, эксперт, личный бренд',
   'Архитектор личности | Проект Я',
   'Премиальный экспертный проект по раскрытию индивидуальности, самопознанию, стилю и психологии.',
-  'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1600'
+  'https://hhzxqrqfeudecnyujowb.supabase.co/storage/v1/object/public/AMIRA/Zemfira.jpg'
 );
 
 -- 11. Insert Design Settings

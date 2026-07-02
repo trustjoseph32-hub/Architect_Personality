@@ -23,6 +23,15 @@ export const Header: React.FC<HeaderProps> = ({ settings, navigation, currentPat
     return currentPath === url;
   };
 
+  const handleNavClick = (url: string, e: React.MouseEvent) => {
+    if (url.startsWith('#')) {
+      if (currentPath !== '/' && currentPath !== '') {
+        e.preventDefault();
+        navigate('/' + url);
+      }
+    }
+  };
+
   return (
     <header className="sticky top-0 z-40 bg-[var(--bg-color)]/95 backdrop-blur-md border-b border-stone-200/40 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 h-20 flex items-center justify-between">
@@ -47,6 +56,7 @@ export const Header: React.FC<HeaderProps> = ({ settings, navigation, currentPat
             <a
               key={item.id}
               href={item.url}
+              onClick={(e) => handleNavClick(item.url, e)}
               className={`text-[10px] uppercase tracking-widest font-medium transition-all duration-300 relative py-2 ${
                 isActive(item.url)
                   ? 'text-[var(--primary-color)] border-b border-[var(--primary-color)] font-semibold'
@@ -94,7 +104,10 @@ export const Header: React.FC<HeaderProps> = ({ settings, navigation, currentPat
               <a
                 key={item.id}
                 href={item.url}
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={(e) => {
+                  setMobileMenuOpen(false);
+                  handleNavClick(item.url, e);
+                }}
                 className={`text-xs uppercase tracking-widest font-medium py-2 border-b border-stone-100 ${
                   isActive(item.url) ? 'text-[var(--accent-color)] font-bold' : 'text-stone-600'
                 }`}

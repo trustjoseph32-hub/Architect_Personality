@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRouter } from '../../lib/use-router.js';
-import { Direction } from '../../types.js';
+import { Direction, DirectionBranch } from '../../types.js';
 import Container from '../ui/Container.js';
 import Button from '../ui/Button.js';
 import Card from '../ui/Card.js';
@@ -8,9 +8,10 @@ import { ChevronLeft, ArrowRight, Compass, Check, ArrowUpRight } from 'lucide-re
 
 interface DirectionDetailPageProps {
   direction: Direction;
+  branches: DirectionBranch[];
 }
 
-export const DirectionDetailPage: React.FC<DirectionDetailPageProps> = ({ direction }) => {
+export const DirectionDetailPage: React.FC<DirectionDetailPageProps> = ({ direction, branches }) => {
   const { navigate } = useRouter();
 
   if (!direction) {
@@ -25,6 +26,9 @@ export const DirectionDetailPage: React.FC<DirectionDetailPageProps> = ({ direct
       </div>
     );
   }
+
+  // Filter branches matching this direction
+  const dirBranches = branches.filter(b => b.direction_id === direction.id && b.is_published);
 
   let results: string[] = [];
   try {
@@ -47,16 +51,16 @@ export const DirectionDetailPage: React.FC<DirectionDetailPageProps> = ({ direct
       <Container>
         {/* Back Link Button */}
         <button
-          onClick={() => navigate('/directions')}
+          onClick={() => navigate('/')}
           className="inline-flex items-center text-xs font-mono tracking-widest text-stone-500 hover:text-amber-800 uppercase font-medium mb-12 cursor-pointer transition-colors"
         >
-          <ChevronLeft className="w-4 h-4 mr-1.5" /> Ко всем направлениям
+          <ChevronLeft className="w-4 h-4 mr-1.5" /> На главную
         </button>
 
         {/* Editorial Title and Subtitle Header */}
         <header className="max-w-4xl space-y-6 mb-16">
           <span className="font-mono text-xs tracking-[0.25em] text-amber-800 uppercase font-semibold">
-            ПОДРОБНЫЙ РАЗБОР НАПРАВЛЕНИЯ
+            {direction.key_question || 'ПОДРОБНЫЙ РАЗБОР НАПРАВЛЕНИЯ'}
           </span>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-medium text-slate-900 leading-tight font-heading">
             {direction.title}
@@ -88,6 +92,32 @@ export const DirectionDetailPage: React.FC<DirectionDetailPageProps> = ({ direct
                 <p>Мы предлагаем целостную методологию, благодаря которой вы получаете не временные косметические изменения, а формируете фундаментальную внутреннюю опору, позволяющую вашему новому стилю выглядеть аутентично и органично в любой профессиональной и личной среде.</p>
               </div>
             </div>
+
+            {/* Internal Branches */}
+            {dirBranches.length > 0 && (
+              <div className="space-y-8">
+                <h2 className="font-heading text-2xl sm:text-3xl text-slate-900 font-semibold border-b border-stone-200 pb-4">
+                  Внутренние ветки направления
+                </h2>
+                <div className="grid grid-cols-1 gap-6">
+                  {dirBranches.map((branch, index) => (
+                    <Card key={branch.id} className="p-6 sm:p-8 border border-stone-200 bg-white shadow-sm flex flex-col md:flex-row gap-6 items-start rounded-2xl">
+                      <div className="w-10 h-10 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center flex-shrink-0 text-amber-800 font-mono text-sm font-bold">
+                        0{index + 1}
+                      </div>
+                      <div className="space-y-2">
+                        <h4 className="text-lg font-heading font-medium text-slate-900">
+                          {branch.title}
+                        </h4>
+                        <p className="text-sm text-stone-500 font-light leading-relaxed">
+                          {branch.short_description}
+                        </p>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Stages of work */}
             <div className="space-y-8">
@@ -149,7 +179,7 @@ export const DirectionDetailPage: React.FC<DirectionDetailPageProps> = ({ direct
               <Button
                 variant="primary"
                 className="w-full py-4 text-xs tracking-widest font-semibold uppercase"
-                onClick={() => navigate('/#lead-form')}
+                onClick={() => navigate('/#how-it-works')}
               >
                 Оставить заявку <ArrowUpRight className="w-4 h-4 ml-2" />
               </Button>

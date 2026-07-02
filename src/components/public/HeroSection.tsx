@@ -25,7 +25,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ section, buttonStyle =
     console.error('Failed to parse Hero data_json', e);
   }
 
-  const bgImage = section.image_url || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1600';
+  const bgImage = section.image_url || 'https://hhzxqrqfeudecnyujowb.supabase.co/storage/v1/object/public/AMIRA/Zemfira.jpg';
   const additionalImage = extraData.additional_image_url || 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=800';
 
   return (
@@ -84,7 +84,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ section, buttonStyle =
           </div>
 
           {/* Graphics/Image Area */}
-          <div className="lg:col-span-6 relative flex items-center justify-center min-h-[460px] sm:min-h-[580px] w-full">
+          <div className="lg:col-span-6 relative flex flex-col items-center justify-center min-h-[460px] sm:min-h-[580px] w-full">
             {/* Large Main Image Container resembling the sand-oval portrait */}
             <div className="w-[280px] h-[380px] sm:w-[360px] sm:h-[500px] bg-[#EBE7E0] rounded-[140px] sm:rounded-[200px] overflow-hidden shadow-2xl relative z-0 border-[8px] border-white/30 transition-transform duration-700 hover:scale-[1.02]">
               <img
@@ -99,34 +99,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ section, buttonStyle =
             </div>
 
             {/* Floating Secondary Detail */}
-            <div className="absolute top-4 -right-2 sm:top-16 sm:-right-4 w-[200px] sm:w-[240px] p-6 sm:p-8 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl z-10 flex flex-col gap-3 border border-stone-200/30">
+            <div className="relative mt-8 sm:mt-0 sm:absolute sm:top-16 sm:-right-4 w-full max-w-[280px] sm:w-[260px] p-6 sm:p-8 bg-white/40 backdrop-blur-xl rounded-2xl shadow-[0_20px_50px_rgba(40,35,30,0.06)] z-10 flex flex-col gap-3 border border-white/50">
               <span className="font-heading text-3xl italic text-[var(--accent-color)] leading-[0.1]">«</span>
               <p className="font-heading text-sm sm:text-lg leading-snug font-light italic text-[var(--primary-color)]">
-                {section.quote || 'Индивидуальность становится не случайностью, а системой.'}
+                {section.quote || 'Внешний вид — это самое быстрое послание, которое вы отправляете миру. Пусть оно будет правдивым.'}
               </p>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-[1px] bg-[var(--primary-color)]"></div>
                 <span className="font-sans text-[8px] sm:text-[9px] uppercase tracking-widest text-stone-600 font-medium">
                   Земфира Хисамутдинова
                 </span>
-              </div>
-            </div>
-
-            {/* Statistics / Philosophy Micro-Labels */}
-            <div className="absolute bottom-4 -left-4 sm:bottom-12 sm:-left-12 flex flex-col gap-5 z-10 bg-[var(--bg-color)]/80 backdrop-blur-sm p-4 rounded-xl border border-stone-200/20 sm:bg-transparent sm:backdrop-blur-none sm:border-none sm:p-0">
-              <div className="flex items-center gap-3">
-                <span className="font-heading text-3xl sm:text-4xl text-[var(--primary-color)] font-light">01</span>
-                <div className="flex flex-col">
-                  <span className="font-sans text-[8px] sm:text-[9px] uppercase font-bold tracking-widest text-[var(--primary-color)]">Аутентичность</span>
-                  <span className="font-sans text-[7px] sm:text-[8px] text-[var(--accent-color)] uppercase tracking-widest">Внутренняя правда</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="font-heading text-3xl sm:text-4xl text-[var(--primary-color)] font-light">02</span>
-                <div className="flex flex-col">
-                  <span className="font-sans text-[8px] sm:text-[9px] uppercase font-bold tracking-widest text-[var(--primary-color)]">Реализация</span>
-                  <span className="font-sans text-[7px] sm:text-[8px] text-[var(--accent-color)] uppercase tracking-widest">Через природу</span>
-                </div>
               </div>
             </div>
           </div>

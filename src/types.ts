@@ -60,10 +60,24 @@ export interface Direction {
   image_url: string;
   icon: string;
   results_json: string; // List of results/outcomes
+  key_question?: string;
+  accent_color?: string;
   sort_order: number;
   is_published: boolean;
   seo_title: string;
   seo_description: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DirectionBranch {
+  id: string;
+  direction_id: string;
+  title: string;
+  short_description: string;
+  full_description: string;
+  sort_order: number;
+  is_published: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -137,7 +151,7 @@ export interface Review {
   updated_at: string;
 }
 
-export type LeadStatus = 'new' | 'in_progress' | 'closed';
+export type LeadStatus = 'new' | 'in_progress' | 'consultation_scheduled' | 'closed' | 'declined';
 
 export interface Lead {
   id: string;
@@ -145,10 +159,31 @@ export interface Lead {
   phone: string;
   email: string;
   messenger: string;
-  direction: string;
+  direction?: string;
+  selected_areas?: string[]; // Array of selected area titles
+  desired_changes?: string;
+  main_obstacle?: string;
   message: string;
   status: LeadStatus;
   admin_comment: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DevelopmentArea {
+  id: string;
+  title: string;
+  slug: string;
+  short_description: string;
+  full_description: string;
+  icon: string;
+  image_url: string;
+  tasks_json: string; // JSON string representing tasks/steps
+  results_json: string; // JSON string representing results
+  sort_order: number;
+  is_published: boolean;
+  seo_title: string;
+  seo_description: string;
   created_at: string;
   updated_at: string;
 }
@@ -189,6 +224,8 @@ export interface DatabaseSchema {
   navigation_items: NavigationItem[];
   page_sections: PageSection[];
   directions: Direction[];
+  direction_branches: DirectionBranch[];
+  development_areas: DevelopmentArea[];
   services: Service[];
   team_members: TeamMember[];
   founder: Founder;

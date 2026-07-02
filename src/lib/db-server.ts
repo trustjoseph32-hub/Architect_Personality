@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { DatabaseSchema, SiteSettings, NavigationItem, PageSection, Direction, Service, TeamMember, Founder, Review, Lead, SeoPage, DesignSettings } from '../types.js';
+import { DatabaseSchema, SiteSettings, NavigationItem, PageSection, Direction, DirectionBranch, DevelopmentArea, Service, TeamMember, Founder, Review, Lead, SeoPage, DesignSettings } from '../types.js';
 
 const DB_DIR = path.join(process.cwd(), 'data');
 const DB_FILE = path.join(DB_DIR, 'db.json');
@@ -11,18 +11,18 @@ const generateId = () => Math.random().toString(36).substring(2, 11);
 const defaultDb: DatabaseSchema = {
   site_settings: {
     id: 'settings_1',
-    site_name: 'Проект Я: Архитектор личности',
+    site_name: 'Проект Я — архитектура личности, образа и реализации',
     logo_text: 'ПРОЕКТ Я',
     logo_image_url: '',
     phone: '+7 (999) 123-45-67',
-    email: 'hello@project-ya.ru',
+    email: 'hello@proektya.ru',
     city: 'Москва',
-    address: 'Пресненская набережная, 12, Москва-Сити',
+    address: 'Москва',
     telegram_url: 'https://t.me/project_ya',
     whatsapp_url: 'https://wa.me/79991234567',
     instagram_url: 'https://instagram.com/project_ya',
-    vk_url: 'https://vk.com/project_ya',
-    youtube_url: 'https://youtube.com/project_ya',
+    vk_url: '',
+    youtube_url: '',
     copyright_text: '© 2026 Проект Я. Все права защищены.',
     privacy_policy_url: '#',
     personal_data_url: '#',
@@ -30,34 +30,32 @@ const defaultDb: DatabaseSchema = {
     updated_at: new Date().toISOString()
   },
   navigation_items: [
-    { id: 'nav_1', label: 'Философия', url: '#philosophy', type: 'anchor', sort_order: 1, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
-    { id: 'nav_2', label: 'О проекте', url: '/about', type: 'page', sort_order: 2, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
-    { id: 'nav_3', label: 'Направления', url: '/directions', type: 'page', sort_order: 3, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
-    { id: 'nav_4', label: 'Услуги', url: '#services', type: 'anchor', sort_order: 4, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
-    { id: 'nav_5', label: 'Команда', url: '/team', type: 'page', sort_order: 5, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
-    { id: 'nav_6', label: 'Основатель', url: '/founder', type: 'page', sort_order: 6, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
-    { id: 'nav_7', label: 'Отзывы', url: '/reviews', type: 'page', sort_order: 7, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
-    { id: 'nav_8', label: 'Контакты', url: '/contacts', type: 'page', sort_order: 8, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
+    { id: 'nav_1', label: 'Философия', url: '#philosophy', type: 'anchor', sort_order: 1, is_active: false, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+    { id: 'nav_2', label: 'О проекте', url: '#about', type: 'anchor', sort_order: 2, is_active: false, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+    { id: 'nav_3', label: 'Направления', url: '#directions', type: 'anchor', sort_order: 3, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+    { id: 'nav_4', label: 'Как это работает', url: '#how-it-works', type: 'anchor', sort_order: 4, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+    { id: 'nav_5', label: 'Основатель', url: '#founder', type: 'anchor', sort_order: 5, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+    { id: 'nav_6', label: 'Заявка', url: '#lead-form', type: 'anchor', sort_order: 6, is_active: false, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+    { id: 'nav_7', label: 'Контакты', url: '#contacts', type: 'anchor', sort_order: 7, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
   ],
   page_sections: [
     {
       id: 'sec_hero',
       page_key: 'home',
       section_key: 'hero',
-      title: 'Проект “Я”: архитектор личности',
-      subtitle: 'Пространство для раскрытия аутентичности, личного стиля и внутренней опоры',
-      eyebrow: 'Проект раскрытия индивидуальности',
-      content: 'Мы помогаем человеку увидеть свою индивидуальность, соединить внутреннее состояние с внешним образом и выстроить личную стратегию проявления в жизни, профессии и отношениях.',
-      quote: '',
-      image_url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1600',
+      title: 'Проект «Я»',
+      subtitle: 'Архитектура личности, образа и реализации',
+      eyebrow: '',
+      content: 'Пространство для тех, кто хочет соединить внутреннее состояние, внешний образ и личную реализацию в одну цельную систему. Мы помогаем человеку лучше понять себя, выразить индивидуальность через стиль и позиционирование, а затем проявить это в профессии, личном бренде или собственном деле.',
+      quote: '«Внешний вид — это самое быстрое послание, которое вы отправляете миру. Пусть оно будет правдивым.»',
+      image_url: 'https://hhzxqrqfeudecnyujowb.supabase.co/storage/v1/object/public/AMIRA/Zemfira.jpg',
       button_text: 'Оставить заявку',
       button_url: '#lead-form',
       sort_order: 1,
       is_active: true,
       data_json: JSON.stringify({
         secondary_button_text: 'Узнать подробнее',
-        secondary_button_url: '#philosophy',
-        additional_image_url: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=800'
+        secondary_button_url: '#about'
       }),
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
@@ -66,22 +64,20 @@ const defaultDb: DatabaseSchema = {
       id: 'sec_philosophy',
       page_key: 'home',
       section_key: 'philosophy',
-      title: 'Наша Философия',
-      subtitle: 'Трансформация через осознанность и стиль',
-      eyebrow: 'ЦЕННОСТИ И ПРИНЦИПЫ',
-      content: 'Мы верим, что истинная красота и сила человека рождаются на стыке глубокого понимания себя и гармоничного внешнего проявления. Наш подход базируется на пяти фундаментальных принципах:',
-      quote: '«Быть собой — это не роскошь, а единственно верная стратегия жизни.»',
-      image_url: 'https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?auto=format&fit=crop&q=80&w=800',
+      title: 'Человек раскрывается целиком',
+      subtitle: '',
+      eyebrow: 'ФИЛОСОФИЯ',
+      content: 'Мы не рассматриваем человека отдельно как внешность, профессию, тело или социальную роль. Личность проявляется через состояние, выбор, образ, отношения, дело и то, как человек занимает место в мире.\n\nПроект «Я» помогает соединить внутреннее и внешнее: понять себя, собрать образ и проявиться в жизни более точно.',
+      quote: '',
+      image_url: '',
       button_text: '',
       button_url: '',
       sort_order: 2,
       is_active: true,
       data_json: JSON.stringify([
-        { title: 'Аутентичность', description: 'Быть верным своей природе и не пытаться соответствовать чужим ожиданиям.' },
-        { title: 'Индивидуальность', description: 'Каждая личность — уникальный архитектурный ансамбль со своими пропорциями, смыслами и талантами.' },
-        { title: 'Внутренняя опора', description: 'Развитие психологической устойчивости и глубокого понимания своих сильных сторон.' },
-        { title: 'Осознанный образ', description: 'Одежда и стиль как продолжение внутреннего мира, а не просто слепое следование трендам.' },
-        { title: 'Реализация через природу', description: 'Раскрытие потенциала без выгорания и надрыва, следуя своим подлинным ценностям.' }
+        { title: 'Внутренняя опора', description: 'понимание себя, своих ценностей, состояния и направления движения.' },
+        { title: 'Внешний образ', description: 'стиль, одежда и визуальное позиционирование как продолжение личности.' },
+        { title: 'Реализация', description: 'проявление себя в профессии, личном бренде, деятельности или собственном деле.' }
       ]),
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
@@ -91,24 +87,37 @@ const defaultDb: DatabaseSchema = {
       page_key: 'home',
       section_key: 'about',
       title: 'О проекте',
-      subtitle: 'Пространство, где индивидуальность становится системой',
-      eyebrow: 'ИМИДЖЕВЫЙ ЛОНГРИД',
-      content: 'Проект “Я” возник как ответ на потребность современного человека в глубоком самопознании и поиске своего подлинного проявления. Мы объединили методы современной практической психологии, телесного коучинга и концептуальной стилистики, чтобы создать комплексный подход к развитию личности.',
-      quote: '«Мы создаем пространство, где ваша индивидуальность становится не случайностью, а выверенной системой.»',
+      subtitle: 'Пространство для раскрытия вашего потенциала',
+      eyebrow: 'О ПРОЕКТЕ',
+      content: 'Проект «Я» — это авторское пространство для личного, визуального и профессионального развития.\n\nНа старте проект помогает человеку определить актуальную точку роста: внутреннее состояние, образ или реализацию. В дальнейшем проект будет развиваться как экспертная платформа, где постепенно появятся специалисты, программы и направления для комплексного развития человека.',
+      quote: '',
       image_url: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=800',
-      button_text: 'Читать миссию',
-      button_url: '/about',
+      button_text: 'Получить первичный маршрут',
+      button_url: '#lead-form',
       sort_order: 3,
       is_active: true,
       data_json: JSON.stringify({
-        mission: 'Помочь каждому человеку раскрыть свой уникальный код личности, обрести уверенность и проявить свою внутреннюю эстетику во внешнем мире.',
-        values: [
-          'Уважение к уникальной истории каждого человека',
-          'Глубинный психологический подход взамен поверхностных решений',
-          'Эстетика и качество в каждой детали взаимодействия',
-          'Научно доказанные методы коучинга и психотерапии'
-        ]
+        mission: 'Раскрыть уникальный код личности каждого человека.',
+        values: []
       }),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    },
+    {
+      id: 'sec_expert_env',
+      page_key: 'home',
+      section_key: 'expert_env',
+      title: 'Экспертная среда проекта',
+      subtitle: '',
+      eyebrow: 'СООБЩЕСТВО',
+      content: 'Сейчас проект развивается как авторское пространство. Постепенно к нему будут присоединяться специалисты в области психологии, стиля, здоровья, личного бренда, профессионального развития и бизнеса.',
+      quote: '',
+      image_url: '',
+      button_text: 'Стать экспертом проекта',
+      button_url: '#lead-form',
+      sort_order: 4,
+      is_active: true,
+      data_json: '{}',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     }
@@ -116,255 +125,219 @@ const defaultDb: DatabaseSchema = {
   directions: [
     {
       id: 'dir_1',
-      title: 'Личная стратегия',
-      slug: 'personal-strategy',
-      short_description: 'Проектирование жизненного пути на основе ваших ценностей и потенциала.',
-      full_description: 'Глубокая индивидуальная работа по определению ваших ключевых ориентиров, сильных сторон и барьеров. Мы создаем пошаговый план развития вашей личности в карьере, отношениях и самореализации, опираясь на ваши подлинные стремления, а не навязанные стереотипы.',
-      image_url: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=800',
-      icon: 'Compass',
+      title: 'Личность',
+      slug: 'personality',
+      key_question: 'Кто я?',
+      accent_color: '#FAF5F0',
+      short_description: 'Внутренняя основа человека: состояние, ценности, самоотношение, тело, энергия и способ воспринимать себя и мир.',
+      full_description: 'Личность — это внутренняя основа: состояние, ценности, самоотношение, тело, энергия и способ воспринимать себя, людей и жизненные ситуации.',
+      image_url: 'https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?auto=format&fit=crop&q=80&w=800',
+      icon: 'Brain',
       results_json: JSON.stringify([
-        'Ясное понимание своих жизненных целей на 3-5 лет',
-        'Список личных ценностей и сильных качеств',
-        'Освобождение от синдрома самозванца',
-        'Пошаговый план проявления в социуме'
+        'больше ясности о себе',
+        'лучшее понимание своих ценностей',
+        'более устойчивая внутренняя опора',
+        'понимание, с чего начать личное развитие'
       ]),
       sort_order: 1,
       is_published: true,
-      seo_title: 'Личная стратегия развития личности | Проект Я',
-      seo_description: 'Проектирование жизненного пути на основе личных ценностей.',
+      seo_title: 'Направление Личность | Проект Я',
+      seo_description: 'Внутреннее состояние, психология, привычки и отношение к себе.',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     },
     {
       id: 'dir_2',
-      title: 'Индивидуальный стиль',
-      slug: 'personal-style',
-      short_description: 'Создание визуального образа, транслирующего ваши смыслы и статус.',
-      full_description: 'Стиль — это не про моду, это невербальный диалог с миром. Мы помогаем составить гармоничный гардероб, который транслирует ваш характер, ценности и профессиональный статус, делая вас уверенными в любой ситуации.',
+      title: 'Образ',
+      slug: 'image',
+      key_question: 'Как я выгляжу?',
+      accent_color: '#F3EFE9',
+      short_description: 'Внешнее выражение личности через стиль, одежду, визуальный код, эстетику и точное позиционирование.',
+      full_description: 'Образ — это способ сделать внутреннее видимым: через стиль, одежду, визуальный код, эстетику и точное позиционирование.',
       image_url: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=80&w=800',
       icon: 'Sparkles',
       results_json: JSON.stringify([
-        'Идеально подобранная палитра цветов и силуэтов',
-        'Капсульный гардероб под ваши задачи',
-        'Экономия времени при покупках',
-        'Уверенность в своем внешнем виде на 100%'
+        'более точный внешний образ',
+        'понимание своего визуального кода',
+        'стиль, который поддерживает личность',
+        'образ, связанный с ценностями и целями'
       ]),
       sort_order: 2,
       is_published: true,
-      seo_title: 'Создание индивидуального стиля | Проект Я',
-      seo_description: 'Разработка визуального образа и гардероба на основе внутренних смыслов.',
+      seo_title: 'Направление Образ | Проект Я',
+      seo_description: 'Внешний стиль, одежда, подбор гардероба и визуальная проявленность.',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     },
     {
       id: 'dir_3',
-      title: 'Психология образа',
-      slug: 'image-psychology',
-      short_description: 'Синхронизация внутреннего самоощущения с внешним проявлением.',
-      full_description: 'Интегративный подход на стыке психотерапии и стилистики. Мы исследуем ваши внутренние зажимы, страхи проявления, проблемы с самооценкой и через работу с телом, цветом и текстурами помогаем принять и полюбить свое истинное "Я".',
-      image_url: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&q=80&w=800',
-      icon: 'UserCheck',
+      title: 'Реализация',
+      slug: 'realization',
+      key_question: 'Как я проявляюсь?',
+      accent_color: '#EDEAE4',
+      short_description: 'Переход от внутреннего понимания и внешнего образа к профессии, личному бренду, бизнесу и деятельности.',
+      full_description: 'Реализация — это переход от внутреннего понимания и внешнего образа к действиям: профессии, бренду, бизнесу и публичному проявлению.',
+      image_url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800',
+      icon: 'TrendingUp',
       results_json: JSON.stringify([
-        'Принятие своей телесности',
-        'Снятие блоков на проявление себя',
-        'Осознание психологических защит через одежду',
-        'Глубокое чувство внутренней свободы'
+        'яснее профессиональная траектория',
+        'понятнее личное позиционирование',
+        'первые шаги в развитии бренда',
+        'связь между личностью, образом и деятельностью'
       ]),
       sort_order: 3,
       is_published: true,
-      seo_title: 'Психология образа и терапия стиля | Проект Я',
-      seo_description: 'Синхронизация внутреннего состояния с внешним видом на стыке психологии и моды.',
+      seo_title: 'Направление Реализация | Проект Я',
+      seo_description: 'Профессиональный рост, личный бренд, бизнес и продвижение.',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     }
   ],
-  services: [
+  direction_branches: [
     {
-      id: 'srv_1',
-      title: 'Индивидуальное сопровождение «Архитектура Я»',
-      slug: 'architecture-of-me',
-      short_description: '3-месячная премиальная программа глубинной трансформации личности и стиля.',
-      full_description: 'Это флагманский продукт нашего проекта. Полное погружение в исследование вашей личности, психологических опор и внешнего имиджа с личным ведением от основателя и ведущих экспертов.',
-      target_audience: 'Предприниматели, эксперты, руководители и все, кто находится на пороге масштабных жизненных изменений.',
-      includes_json: JSON.stringify([
-        '12 индивидуальных сессий с психологом и стилистом',
-        'Разработка персональной карты стиля и книги ценностей',
-        'Ревизия гардероба и совместный шопинг-сопровождение',
-        'Поддержка в мессенджере 24/7 в течение всей программы'
-      ]),
-      results_json: JSON.stringify([
-        'Полное обновление имиджа и гардероба',
-        'Четкая стратегия позиционирования и проявления',
-        'Обретение внутренней уверенности и свободы самовыражения'
-      ]),
-      duration: '3 месяца',
-      format: 'Офлайн (Москва) или Онлайн (весь мир)',
-      price: '180 000 ₽',
-      button_text: 'Оставить заявку',
-      button_url: '#lead-form',
-      image_url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800',
-      sort_order: 1,
-      is_published: true,
-      seo_title: 'Индивидуальное сопровождение Архитектура Я | Проект Я',
-      seo_description: 'Премиальная программа трансформации личности и стиля.',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    },
-    {
-      id: 'srv_2',
-      title: 'Экспресс-аудит личности и стиля',
-      slug: 'express-audit',
-      short_description: 'Однократная двухчасовая сессия для определения вектора вашего развития.',
-      full_description: 'Интенсивный разбор вашего текущего состояния, гардероба и позиционирования. Отличная возможность получить быстрый и честный экспертный взгляд со стороны и наметить план самостоятельных действий.',
-      target_audience: 'Тем, кто хочет познакомиться с методологией проекта и получить точечные рекомендации.',
-      includes_json: JSON.stringify([
-        'Предварительное анкетирование',
-        '2-часовая стратегическая онлайн-сессия',
-        'Презентация с рекомендациями по стилю и развитию'
-      ]),
-      results_json: JSON.stringify([
-        'Понимание ключевых ошибок в текущем образе',
-        '3 практических направления для развития стиля',
-        'Рекомендации по преодолению страха проявления'
-      ]),
-      duration: '1 день',
-      format: 'Онлайн в Zoom',
-      price: '25 000 ₽',
-      button_text: 'Оставить заявку',
-      button_url: '#lead-form',
-      image_url: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80&w=800',
-      sort_order: 2,
-      is_published: true,
-      seo_title: 'Экспресс-аудит личности и стиля | Проект Я',
-      seo_description: 'Онлайн сессия разбора образа и стратегии самовыражения.',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    }
-  ],
-  team_members: [
-    {
-      id: 'tm_1',
-      name: 'Екатерина Миронова',
-      role: 'Старший психотерапевт-коуч',
-      short_description: 'Специалист по телесно-ориентированной терапии и глубинному коучингу с опытом более 8 лет.',
-      full_description: 'Екатерина помогает клиентам обнаружить свои истинные ценности, снять телесные зажимы и страхи, мешающие самовыражению. В своей работе использует интегративный подход, сочетающий гештальт-терапию и современный коучинг.',
-      photo_url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=800',
-      social_links_json: JSON.stringify({ telegram: 'https://t.me/kate_mironova' }),
+      id: 'br_1_1',
+      direction_id: 'dir_1',
+      title: 'Психология и самоотношение',
+      short_description: 'самооценка, эмоции, внутренняя опора, тревога, отношение к себе, личные границы.',
+      full_description: 'самооценка, эмоции, внутренняя опора, тревога, отношение к себе, личные границы.',
       sort_order: 1,
       is_published: true,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     },
     {
-      id: 'tm_2',
-      name: 'Александр Орлов',
-      role: 'Концептуальный стилист',
-      short_description: 'Имидж-дизайнер, эксперт по визуальной коммуникации. Создает гардеробы со смыслом.',
-      full_description: 'Александр рассматривает одежду как продолжение характера человека. Работал с ведущими российскими брендами и медийными личностями. Помогает соединить статус, удобство и художественную эстетику.',
-      photo_url: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=800',
-      social_links_json: JSON.stringify({ telegram: 'https://t.me/orlov_stylist' }),
+      id: 'br_1_2',
+      direction_id: 'dir_1',
+      title: 'Тело, здоровье и энергия',
+      short_description: 'спорт, питание, привычки, восстановление, физическое состояние, ресурсность.',
+      full_description: 'спорт, питание, привычки, восстановление, физическое состояние, ресурсность.',
       sort_order: 2,
+      is_published: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    },
+    {
+      id: 'br_1_3',
+      direction_id: 'dir_1',
+      title: 'Ценности и отношения с миром',
+      short_description: 'личная философия, отношение к жизни, окружению, ситуациям, выбору и собственному пути.',
+      full_description: 'личная философия, отношение к жизни, окружению, ситуациям, выбору и собственному пути.',
+      sort_order: 3,
+      is_published: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    },
+    {
+      id: 'br_2_1',
+      direction_id: 'dir_2',
+      title: 'Стиль и гардероб',
+      short_description: 'подбор образа, одежда, капсула, внешний стиль, соответствующий личности.',
+      full_description: 'подбор образа, одежда, капсула, внешний стиль, соответствующий личности.',
+      sort_order: 1,
+      is_published: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    },
+    {
+      id: 'br_2_2',
+      direction_id: 'dir_2',
+      title: 'Визуальное позиционирование',
+      short_description: 'визуальный код, фотостиль, образ в социальных сетях, эстетика личной подачи.',
+      full_description: 'визуальный код, фотостиль, образ в социальных сетях, эстетика личной подачи.',
+      sort_order: 2,
+      is_published: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    },
+    {
+      id: 'br_2_3',
+      direction_id: 'dir_2',
+      title: 'Бренд одежды',
+      short_description: 'одежда как продолжение личности, ценностей и авторского взгляда на образ.',
+      full_description: 'одежда как продолжение личности, ценностей и авторского взгляда на образ.',
+      sort_order: 3,
+      is_published: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    },
+    {
+      id: 'br_3_1',
+      direction_id: 'dir_3',
+      title: 'Профессиональное развитие',
+      short_description: 'компетенции, обучение, наставники, профессиональный рост, карьерная или экспертная траектория.',
+      full_description: 'компетенции, обучение, наставники, профессиональный рост, карьерная или экспертная траектория.',
+      sort_order: 1,
+      is_published: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    },
+    {
+      id: 'br_3_2',
+      direction_id: 'dir_3',
+      title: 'Личный бренд',
+      short_description: 'позиционирование, ценности, философия, социальные сети, публичность и узнаваемость.',
+      full_description: 'позиционирование, ценности, философия, социальные сети, публичность и узнаваемость.',
+      sort_order: 2,
+      is_published: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    },
+    {
+      id: 'br_3_3',
+      direction_id: 'dir_3',
+      title: 'Бизнес и деятельность',
+      short_description: 'развитие своего дела, продукта, проекта, предпринимательства и коммуникации с аудиторией.',
+      full_description: 'развитие своего дела, продукта, проекта, предпринимательства и коммуникации с аудиторией.',
+      sort_order: 3,
       is_published: true,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     }
   ],
+  development_areas: [],
+  services: [],
+  team_members: [],
   founder: {
     id: 'fnd_1',
     name: 'Земфира Хисамутдинова',
     role: 'Основатель Проекта, Психолог-Имиджмейкер',
-    photo_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800',
+    photo_url: 'https://hhzxqrqfeudecnyujowb.supabase.co/storage/v1/object/public/AMIRA/Zemfira.jpg',
     short_description: 'Автор уникальной методики синергии психологии и стиля. Более 10 лет опыта работы с первыми лицами.',
-    full_bio: 'Земфира Хисамутдинова посвятила более десяти лет изучению того, как наш внутренний мир отражается в наших внешних выборах. Получив образование в сфере практической психологии и концептуального стайлинга во Франции, она объединила эти дисциплины в единую стройную систему. Земфира убеждена, что одежда — это мощнейший инструмент психологической саморегуляции и социальной коммуникации.',
-    experience: '12 лет практики, более 500 индивидуальных выпускников по всему миру, спикер отраслевых конференций.',
+    full_bio: 'Проект «Я» создан вокруг идеи целостного развития человека. В центре не отдельная услуга, а сам человек: его состояние, образ, ценности, деятельность и способ проявляться в мире. Получив психологическое образование и многолетний практический опыт, я объединила эти аспекты, чтобы помочь каждому обрести истинную гармонию.',
+    experience: '12 лет практики, более 500 индивидуальных выпускников по всему миру.',
     education_json: JSON.stringify([
       'МГУ им. М.В. Ломоносова, Факультет психологии',
-      'Istituto Marangoni (Париж), Имидж-дизайн и стайлинг',
-      'Сертифицированный коуч ICF'
+      'Имидж-дизайн и концептуальный стайлинг',
+      'Сертифицированный коуч'
     ]),
     achievements_json: JSON.stringify([
-      'Разработала авторский курс «Психология проявления»',
-      'Публикации в Vogue, Harper’s Bazaar, Psychologies',
-      'Приглашенный лектор в ведущих школах стиля России'
+      'Разработала авторский метод синергии психологии и стиля',
+      'Более 500 выпускников индивидуального сопровождения'
     ]),
     competencies_json: JSON.stringify([
       'Глубинный анализ личности',
-      'Разработка концепций личных брендов',
+      'Разработка концепций личного бренда',
       'Психологическое консультирование',
       'Концептуальный стайлинг'
     ]),
     quote: '«Внешний вид — это самое быстрое послание, которое вы отправляете миру. Пусть оно будет правдивым.»',
-    button_text: 'Оставить заявку на консультацию',
+    button_text: 'Связаться',
     button_url: '#lead-form',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
   },
-  reviews: [
-    {
-      id: 'rev_1',
-      client_name: 'Мария Ковалева',
-      client_role: 'Основательница IT-стартапа',
-      client_photo_url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=800',
-      review_text: 'Программа «Архитектура Я» разделила мою жизнь на до и после. Я пришла с полной потерей ориентиров и непониманием, кто я в новой роли лидера. Алёна и ее команда помогли мне раскопать свои подлинные опоры. А стиль, который мне создали, теперь придает мне невероятную силу на переговорах с инвесторами.',
-      result_text: 'Обрела уверенность лидера, привлекла инвестиции на $1.5M, полностью обновила гардероб.',
-      review_date: 'Июнь 2026',
-      sort_order: 1,
-      is_published: true,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    },
-    {
-      id: 'rev_2',
-      client_name: 'Дмитрий Шепелев',
-      client_role: 'Топ-менеджер финансовой компании',
-      client_photo_url: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=800',
-      review_text: 'Никогда не думал, что работа со стилистом может быть настолько психологически глубокой. Здесь нет навязывания модных трендов. Мы шли от моих ценностей, целей и внутреннего ощущения. Результат поразил — одежда села как вторая кожа, а общение с коллегами и партнерами стало более искренним и продуктивным.',
-      result_text: 'Составил гардероб-капсулу из 25 вещей, закрыл сделку года, чувствую себя на 10/10.',
-      review_date: 'Май 2026',
-      sort_order: 2,
-      is_published: true,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    }
-  ],
-  leads: [
-    {
-      id: 'lead_1',
-      name: 'София Соколова',
-      phone: '+7 911 222-33-44',
-      email: 'sofia@mail.ru',
-      messenger: 'Telegram: @sofia_s',
-      direction: 'Личная стратегия',
-      message: 'Здравствуйте! Хочу записаться на программу "Архитектура Я". Интересует личная стратегия и работа со стилем.',
-      status: 'new',
-      admin_comment: '',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    },
-    {
-      id: 'lead_2',
-      name: 'Артем Лебедев',
-      phone: '+7 922 555-66-77',
-      email: 'artem@design.ru',
-      messenger: 'WhatsApp: +79225556677',
-      direction: 'Индивидуальный стиль',
-      message: 'Приветствую! Нужен аудит гардероба и подбор нового стиля под выступление на конференции.',
-      status: 'in_progress',
-      admin_comment: 'Договорились о созвоне в пятницу',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    }
-  ],
+  reviews: [],
+  leads: [],
   seo_pages: [
     {
       id: 'seo_home',
       page_key: 'home',
-      title: 'Архитектор личности | Проект Я',
-      description: 'Премиальный экспертный проект по раскрытию индивидуальности, самопознанию, стилю и психологии.',
-      keywords: 'психология, стиль, индивидуальность, саморазвитие, эксперт, личный бренд',
-      og_title: 'Архитектор личности | Проект Я',
-      og_description: 'Премиальный экспертный проект по раскрытию индивидуальности, самопознанию, стилю и психологии.',
-      og_image_url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1600',
+      title: 'Проект Я — архитектура личности, образа и реализации',
+      description: 'Авторское пространство для тех, кто хочет соединить внутреннее состояние, внешний образ и личную реализацию в одну цельную систему.',
+      keywords: 'личность, стиль, образ, реализация, психология, личный бренд, Земфира Хисамутдинова',
+      og_title: 'Проект Я — архитектура личности, образа и реализации',
+      og_description: 'Авторское пространство для тех, кто хочет соединить внутреннее состояние, внешний образ и личную реализацию в одну цельную систему.',
+      og_image_url: 'https://hhzxqrqfeudecnyujowb.supabase.co/storage/v1/object/public/AMIRA/Zemfira.jpg',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     }
@@ -375,9 +348,9 @@ const defaultDb: DatabaseSchema = {
     accent_color: '#8C7355',
     background_color: '#F5F2ED',
     text_color: '#1A1A1A',
-    heading_font: 'Cormorant Garamond',
-    body_font: 'Montserrat',
-    border_radius: '9999px',
+    heading_font: 'Space Grotesk',
+    body_font: 'Inter',
+    border_radius: '0px',
     button_style: 'premium',
     animations_enabled: true,
     created_at: new Date().toISOString(),
@@ -401,6 +374,15 @@ class JSONDatabase {
       if (fs.existsSync(DB_FILE)) {
         const raw = fs.readFileSync(DB_FILE, 'utf8');
         const parsed = JSON.parse(raw);
+        
+        // Check if we need to migrate/update to the clean premium format
+        const needsPremiumMigration = !parsed.navigation_items || 
+                                      !parsed.navigation_items.some((n: any) => n.url === '#philosophy') || 
+                                      !parsed.direction_branches || 
+                                      !parsed.directions || 
+                                      parsed.directions.length < 3 || 
+                                      !parsed.directions[0].key_question;
+
         // Deep merge or assign to handle new keys cleanly
         this.data = {
           ...defaultDb,
@@ -408,7 +390,14 @@ class JSONDatabase {
           site_settings: { ...defaultDb.site_settings, ...parsed.site_settings },
           founder: { ...defaultDb.founder, ...parsed.founder },
           design_settings: { ...defaultDb.design_settings, ...parsed.design_settings },
+          development_areas: parsed.development_areas || [...defaultDb.development_areas],
+          direction_branches: parsed.direction_branches || [...defaultDb.direction_branches],
         };
+
+        if (needsPremiumMigration) {
+          this.data = { ...defaultDb };
+          this.save();
+        }
       } else {
         this.save();
       }
@@ -493,12 +482,14 @@ class JSONDatabase {
         id: id || 'dir_' + generateId(),
         title: payload.title || 'Новое направление',
         slug: payload.slug || 'new-slug',
+        key_question: payload.key_question || '',
+        accent_color: payload.accent_color || '',
         short_description: payload.short_description || '',
         full_description: payload.full_description || '',
         image_url: payload.image_url || '',
         icon: payload.icon || 'Compass',
         results_json: payload.results_json || '[]',
-        sort_order: payload.sort_order !== undefined ? payload.sort_order : this.data.directions.length + 1,
+        sort_order: payload.sort_order !== undefined ? Number(payload.sort_order) : this.data.directions.length + 1,
         is_published: payload.is_published !== undefined ? payload.is_published : true,
         seo_title: payload.seo_title || '',
         seo_description: payload.seo_description || '',
@@ -515,6 +506,58 @@ class JSONDatabase {
     const lenBefore = this.data.directions.length;
     this.data.directions = this.data.directions.filter(d => d.id !== id);
     if (this.data.directions.length < lenBefore) {
+      this.save();
+      return true;
+    }
+    return false;
+  }
+
+  public getDirectionBranches(): DirectionBranch[] {
+    if (!this.data.direction_branches) {
+      this.data.direction_branches = [];
+    }
+    return [...this.data.direction_branches].sort((a, b) => a.sort_order - b.sort_order);
+  }
+
+  public saveDirectionBranch(id: string | null, payload: Partial<DirectionBranch>): DirectionBranch {
+    if (!this.data.direction_branches) {
+      this.data.direction_branches = [];
+    }
+    const targetId = id || payload.id;
+    const idx = targetId ? this.data.direction_branches.findIndex(b => b.id === targetId) : -1;
+    if (idx !== -1) {
+      this.data.direction_branches[idx] = {
+        ...this.data.direction_branches[idx],
+        ...payload,
+        updated_at: new Date().toISOString()
+      } as DirectionBranch;
+      this.save();
+      return this.data.direction_branches[idx];
+    } else {
+      const newBranch: DirectionBranch = {
+        id: targetId || 'br_' + generateId(),
+        direction_id: payload.direction_id || '',
+        title: payload.title || 'Новая ветка',
+        short_description: payload.short_description || '',
+        full_description: payload.full_description || '',
+        sort_order: payload.sort_order !== undefined ? Number(payload.sort_order) : this.data.direction_branches.length + 1,
+        is_published: payload.is_published !== undefined ? payload.is_published : true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+      this.data.direction_branches.push(newBranch);
+      this.save();
+      return newBranch;
+    }
+  }
+
+  public deleteDirectionBranch(id: string): boolean {
+    if (!this.data.direction_branches) {
+      this.data.direction_branches = [];
+    }
+    const lenBefore = this.data.direction_branches.length;
+    this.data.direction_branches = this.data.direction_branches.filter(b => b.id !== id);
+    if (this.data.direction_branches.length < lenBefore) {
       this.save();
       return true;
     }
@@ -753,6 +796,63 @@ class JSONDatabase {
     };
     this.save();
     return this.data.design_settings;
+  }
+
+  public getDevelopmentAreas(): DevelopmentArea[] {
+    if (!this.data.development_areas) {
+      this.data.development_areas = [...defaultDb.development_areas];
+    }
+    return [...this.data.development_areas].sort((a, b) => a.sort_order - b.sort_order);
+  }
+
+  public saveDevelopmentArea(id: string, payload: Partial<DevelopmentArea>): DevelopmentArea {
+    if (!this.data.development_areas) {
+      this.data.development_areas = [...defaultDb.development_areas];
+    }
+    const idx = this.data.development_areas.findIndex(a => a.id === id);
+    if (idx !== -1) {
+      this.data.development_areas[idx] = {
+        ...this.data.development_areas[idx],
+        ...payload,
+        updated_at: new Date().toISOString()
+      };
+      this.save();
+      return this.data.development_areas[idx];
+    } else {
+      const newArea: DevelopmentArea = {
+        id: id || 'area_' + generateId(),
+        title: payload.title || 'Новая сфера',
+        slug: payload.slug || 'new-area',
+        short_description: payload.short_description || '',
+        full_description: payload.full_description || '',
+        icon: payload.icon || 'Activity',
+        image_url: payload.image_url || '',
+        tasks_json: payload.tasks_json || '[]',
+        results_json: payload.results_json || '[]',
+        sort_order: payload.sort_order !== undefined ? payload.sort_order : this.data.development_areas.length + 1,
+        is_published: payload.is_published !== undefined ? payload.is_published : true,
+        seo_title: payload.seo_title || '',
+        seo_description: payload.seo_description || '',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+      this.data.development_areas.push(newArea);
+      this.save();
+      return newArea;
+    }
+  }
+
+  public deleteDevelopmentArea(id: string): boolean {
+    if (!this.data.development_areas) {
+      this.data.development_areas = [...defaultDb.development_areas];
+    }
+    const lenBefore = this.data.development_areas.length;
+    this.data.development_areas = this.data.development_areas.filter(a => a.id !== id);
+    if (this.data.development_areas.length < lenBefore) {
+      this.save();
+      return true;
+    }
+    return false;
   }
 }
 
