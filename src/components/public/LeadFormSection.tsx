@@ -8,7 +8,7 @@ import Button from '../ui/Button.js';
 import Card from '../ui/Card.js';
 import { 
   Check, ArrowRight, ArrowLeft, ClipboardCheck, Sparkles, 
-  Activity, Brain, Briefcase, Megaphone, TrendingUp, HelpCircle
+  Heart, Brain, Award, Star, Target, Shirt, HelpCircle
 } from 'lucide-react';
 
 interface LeadFormSectionProps {
@@ -35,25 +35,37 @@ export const LeadFormSection: React.FC<LeadFormSectionProps> = ({ directions = [
 
   // Fallback spheres if database is loading
   const defaultSpheres = [
-    { id: 'body', title: 'Тело и здоровье', desc: 'Спорт, питание, энергия, привычки, забота о физическом состоянии.', icon: 'Activity' },
+    { id: 'body', title: 'Тело и здоровье', desc: 'Спорт, питание, энергия, привычки, забота о физическом состоянии.', icon: 'Heart' },
     { id: 'psy', title: 'Психология и внутреннее состояние', desc: 'Отношение к себе, эмоции, самооценка, устойчивость.', icon: 'Brain' },
-    { id: 'career', title: 'Профессия и компетенции', desc: 'Развитие проф. навыков, подбор экспертов, траектория.', icon: 'Briefcase' },
-    { id: 'brand', title: 'Личный бренд и проявленность', desc: 'Ценности, философия, позиционирование, соцсети, образ.', icon: 'Megaphone' },
-    { id: 'business', title: 'Бизнес и деятельность', desc: 'Развитие дела, упаковка, стратегия, продукты, коммуникация.', icon: 'TrendingUp' },
-    { id: 'style', title: 'Стиль и одежда', desc: 'Образ, визуальное позиционирование, одежда как продолжение личности.', icon: 'Sparkles' }
+    { id: 'career', title: 'Профессия и компетенции', desc: 'Развитие проф. навыков, подбор экспертов, траектория.', icon: 'Award' },
+    { id: 'brand', title: 'Личный бренд и проявленность', desc: 'Ценности, философия, позиционирование, соцсети, образ.', icon: 'Star' },
+    { id: 'business', title: 'Бизнес и деятельность', desc: 'Развитие дела, упаковка, стратегия, продукты, коммуникация.', icon: 'Target' },
+    { id: 'style', title: 'Стиль и одежда', desc: 'Образ, визуальное позиционирование, одежда как продолжение личности.', icon: 'Shirt' }
   ];
 
   const spheresToDisplay = areas.length > 0 ? areas : defaultSpheres;
 
   const getIcon = (iconName: string) => {
     switch (iconName) {
-      case 'Activity': return <Activity className="w-5 h-5" />;
-      case 'Brain': return <Brain className="w-5 h-5" />;
-      case 'Briefcase': return <Briefcase className="w-5 h-5" />;
-      case 'Megaphone': return <Megaphone className="w-5 h-5" />;
-      case 'TrendingUp': return <TrendingUp className="w-5 h-5" />;
-      case 'Sparkles': return <Sparkles className="w-5 h-5" />;
-      default: return <HelpCircle className="w-5 h-5" />;
+      case 'Heart':
+      case 'Activity': 
+        return <Heart className="w-5 h-5" />;
+      case 'Brain': 
+        return <Brain className="w-5 h-5" />;
+      case 'Award':
+      case 'Briefcase': 
+        return <Award className="w-5 h-5" />;
+      case 'Star':
+      case 'Megaphone': 
+        return <Star className="w-5 h-5" />;
+      case 'Target':
+      case 'TrendingUp': 
+        return <Target className="w-5 h-5" />;
+      case 'Shirt':
+      case 'Sparkles': 
+        return <Shirt className="w-5 h-5" />;
+      default: 
+        return <HelpCircle className="w-5 h-5" />;
     }
   };
 
@@ -220,7 +232,7 @@ export const LeadFormSection: React.FC<LeadFormSectionProps> = ({ directions = [
                             ? 'bg-amber-900 border-amber-900 text-white' 
                             : 'border-stone-300 bg-white'
                         }`}>
-                          {isSelected && <Check className="w-3.5 h-3.5" />}
+                          {isSelected && <div className="w-2 h-2 rounded-full bg-white" />}
                         </div>
                       </div>
                     );

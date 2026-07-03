@@ -613,7 +613,7 @@ export const AdminDashboard: React.FC = () => {
                     <input type="text" name="whatsapp_url" defaultValue={settings.whatsapp_url} className="px-3 py-2 border rounded-md" />
                   </div>
                   <div className="flex flex-col space-y-1.5">
-                    <label className="text-[10px] font-mono uppercase tracking-wider text-stone-600 font-semibold">Instagram URL</label>
+                    <label className="text-[10px] font-mono uppercase tracking-wider text-stone-600 font-semibold">Мессенджер Max URL</label>
                     <input type="text" name="instagram_url" defaultValue={settings.instagram_url} className="px-3 py-2 border rounded-md" />
                   </div>
                   <div className="flex flex-col space-y-1.5">

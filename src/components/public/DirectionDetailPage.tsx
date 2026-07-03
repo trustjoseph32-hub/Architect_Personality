@@ -97,7 +97,13 @@ export const DirectionDetailPage: React.FC<DirectionDetailPageProps> = ({ direct
             {dirBranches.length > 0 && (
               <div className="space-y-8">
                 <h2 className="font-heading text-2xl sm:text-3xl text-slate-900 font-semibold border-b border-stone-200 pb-4">
-                  Внутренние ветки направления
+                  {direction.title === 'Личность' || direction.slug === 'personality' 
+                    ? 'Развиваем сферы' 
+                    : (direction.title === 'Образ' || direction.slug === 'image' || direction.slug === 'style' || direction.slug === 'look' || direction.slug === 'appearance')
+                      ? 'Меняем сферы'
+                      : (direction.title === 'Реализация' || direction.slug === 'realization' || direction.slug === 'execution' || direction.slug === 'manifestation' || direction.slug === 'implementation')
+                        ? 'Усиливаем сферы'
+                        : 'Внутренние ветки направления'}
                 </h2>
                 <div className="grid grid-cols-1 gap-6">
                   {dirBranches.map((branch, index) => (

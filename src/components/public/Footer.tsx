@@ -54,8 +54,9 @@ export const Footer: React.FC<FooterProps> = ({ settings, navigation }) => {
                 target="_blank"
                 rel="noreferrer"
                 className="w-9 h-9 rounded-full bg-stone-900 border border-slate-800 flex items-center justify-center text-stone-400 hover:text-white hover:border-[var(--accent-color)] transition-all duration-300"
+                title="Messenger Max"
               >
-                <span className="text-xs font-semibold">IN</span>
+                <span className="text-xs font-semibold">MAX</span>
               </a>
             )}
             {settings.vk_url && (

@@ -3,7 +3,7 @@ import { SiteSettings, Direction } from '../../types.js';
 import Container from '../ui/Container.js';
 import SectionTitle from '../ui/SectionTitle.js';
 import LeadFormSection from './LeadFormSection.js';
-import { Phone, Mail, MapPin, Send, MessageCircle } from 'lucide-react';
+import { Phone, Mail, MapPin, Send, MessageCircle, MessageSquare } from 'lucide-react';
 
 interface ContactsPageProps {
   settings: SiteSettings;
@@ -98,6 +98,17 @@ export const ContactsPage: React.FC<ContactsPageProps> = ({ settings, directions
                   className="px-5 py-2.5 bg-[#FAF8F5] border border-stone-200 text-slate-800 text-xs font-mono tracking-widest uppercase rounded-md inline-flex items-center hover:border-amber-800 hover:text-amber-800 transition-all shadow-sm"
                 >
                   <MessageCircle className="w-3.5 h-3.5 mr-2 text-amber-800" /> WhatsApp
+                </a>
+              )}
+              {settings.instagram_url && (
+                <a
+                  href={settings.instagram_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-5 py-2.5 bg-[#FAF8F5] border border-stone-200 text-slate-800 text-xs font-mono tracking-widest uppercase rounded-md inline-flex items-center hover:border-amber-800 hover:text-amber-800 transition-all shadow-sm"
+                  title="Messenger Max"
+                >
+                  <MessageSquare className="w-3.5 h-3.5 mr-2 text-amber-800" /> Max
                 </a>
               )}
             </div>
