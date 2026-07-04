@@ -19,6 +19,7 @@ import HeroSection from './components/public/HeroSection';
 import DirectionsSection from './components/public/DirectionsSection';
 import Model360Section from './components/public/Model360Section';
 import HowItWorksSection from './components/public/HowItWorksSection';
+import FounderSection from './components/public/FounderSection';
 import LeadFormSection from './components/public/LeadFormSection';
 
 // Public pages
@@ -207,6 +208,9 @@ export default function App() {
 
             {/* How It Works Section */}
             <HowItWorksSection />
+
+            {/* Founder Section */}
+            <FounderSection founder={founder} buttonStyle={designSettings?.button_style} />
 
             {/* Inbound Client leads form capture */}
             <LeadFormSection directions={directions} areas={developmentAreas} />

@@ -1510,13 +1510,60 @@ export const AdminDashboard: React.FC = () => {
                     <label className="text-[10px] font-mono uppercase tracking-wider text-stone-600 font-semibold">Роль / Титул</label>
                     <input type="text" name="role" defaultValue={founder.role} className="px-3 py-2 border rounded" />
                   </div>
-                  <div className="flex flex-col space-y-1.5">
-                    <label className="text-[10px] font-mono uppercase tracking-wider text-stone-600 font-semibold">Ссылка на фото</label>
-                    <input type="text" name="photo_url" id="founder-image-field" defaultValue={founder.photo_url} className="px-3 py-2 border rounded" />
-                    <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, (url) => {
-                      const el = document.getElementById('founder-image-field') as HTMLInputElement;
-                      if (el) el.value = url;
-                    })} className="text-xs mt-1" />
+                  <div className="flex flex-col space-y-1.5 col-span-2">
+                    <label className="text-[10px] font-mono uppercase tracking-wider text-stone-600 font-semibold">Фотография основателя</label>
+                    <div className="flex flex-col sm:flex-row items-center gap-6 p-4 border border-stone-200 rounded-lg bg-stone-50">
+                      <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-xl overflow-hidden bg-stone-100 border border-stone-200 flex-shrink-0 shadow-inner relative group">
+                        {founder.photo_url ? (
+                          <img
+                            src={founder.photo_url}
+                            alt="Founder preview"
+                            className="w-full h-full object-cover"
+                            id="founder-preview-img"
+                            referrerPolicy="no-referrer"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-stone-400">
+                            <Image className="w-8 h-8" />
+                          </div>
+                        )}
+                        {uploadLoading && (
+                          <div className="absolute inset-0 bg-white/70 flex items-center justify-center">
+                            <span className="text-xs text-amber-800 font-medium">Загрузка...</span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex-1 space-y-3 w-full sm:w-auto">
+                        <div className="flex flex-col space-y-1.5">
+                          <input 
+                            type="text" 
+                            name="photo_url" 
+                            id="founder-image-field" 
+                            value={founder.photo_url || ''} 
+                            onChange={(e) => {
+                              setFounder({ ...founder, photo_url: e.target.value });
+                            }}
+                            className="px-3 py-2 border rounded text-xs w-full font-mono bg-white" 
+                            placeholder="https://..."
+                          />
+                          <p className="text-[10px] text-stone-500">Укажите прямую ссылку на изображение или загрузите файл с компьютера</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 border border-stone-300 text-stone-700 rounded-md text-xs font-semibold hover:bg-stone-100 active:bg-stone-200 transition-all bg-white shadow-sm">
+                            <Upload className="w-3.5 h-3.5 text-stone-600" />
+                            <span>Выбрать и загрузить фото</span>
+                            <input 
+                              type="file" 
+                              accept="image/*" 
+                              onChange={(e) => handleFileUpload(e, (url) => {
+                                setFounder({ ...founder, photo_url: url });
+                              })} 
+                              className="hidden" 
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div className="flex flex-col space-y-1.5 col-span-2">
                     <label className="text-[10px] font-mono uppercase tracking-wider text-stone-600 font-semibold">Короткое описание</label>
